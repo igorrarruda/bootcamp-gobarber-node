@@ -1,0 +1,48 @@
+version: '3'
+services:
+  node:
+    build: .
+    command: npm run dev
+    ports:
+      - 3333:3333
+    volumes:
+      - .:/usr/app
+      - node_modules:/usr/app/node_modules
+    depends_on:
+      - pg
+      - mongo
+      - redis
+    networks:
+      - gobarber
+      - mongo
+      - redis
+  pg:
+    image: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - gobarber
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+    networks:
+      - mongo
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - redis
+volumes:
+  db_data:
+  node_modules:
+  mongo:
+networks:
+  gobarber:
+  mongo:
+  redis:
